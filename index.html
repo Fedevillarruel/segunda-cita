@@ -372,11 +372,14 @@
       <div class="dot active" id="dot-0"></div>
       <div class="dot" id="dot-1"></div>
       <div class="dot" id="dot-2"></div>
+      <div class="dot" id="dot-3"></div>
+      <div class="dot" id="dot-4"></div>
+      <div class="dot" id="dot-5"></div>
     </div>
 
     <!-- Acertijo 1 -->
     <div class="riddle-block visible" id="riddle-0">
-      <div class="riddle-number">Acertijo 1 de 3</div>
+      <div class="riddle-number">Acertijo 1 de 6</div>
       <div class="riddle-text">
         Hay una puerta que se cierra sola detrás de vos. Lo que está adentro no es un lugar
         ordinario: es una conversación entre lo que sabemos y lo que todavía no.
@@ -393,7 +396,7 @@
 
     <!-- Acertijo 2 -->
     <div class="riddle-block" id="riddle-1">
-      <div class="riddle-number">Acertijo 2 de 3</div>
+      <div class="riddle-number">Acertijo 2 de 6</div>
       <div class="riddle-text">
         Nos vamos a enfrentar sobre una superficie que no es para comer.
         Nos movemos con una herramienta larga y delgada, nunca con las manos.
@@ -411,7 +414,7 @@
 
     <!-- Acertijo 3 -->
     <div class="riddle-block" id="riddle-2">
-      <div class="riddle-number">Acertijo 3 de 3</div>
+      <div class="riddle-number">Acertijo 3 de 6</div>
       <div class="riddle-text">
         Hay un ingrediente que está vivo pero nadie lo ve ni lo escucha.
         Sin él, lo que preparamos sería un ladrillo. Con él, algo crece solo
@@ -425,6 +428,45 @@
         <button class="btn-submit" id="submit-2">Responder</button>
       </div>
       <div class="feedback-msg" id="fb-2"></div>
+    </div>
+
+    <!-- Acertijo 4 -->
+    <div class="riddle-block" id="riddle-3">
+      <div class="riddle-number">Acertijo 4 de 6</div>
+      <div class="riddle-text">
+        ¿A dónde vamos a ir?
+      </div>
+      <div class="answer-row">
+        <input class="answer-input" id="input-3" type="text" placeholder="Tu respuesta…" autocomplete="off" />
+        <button class="btn-submit" id="submit-3">Responder</button>
+      </div>
+      <div class="feedback-msg" id="fb-3"></div>
+    </div>
+
+    <!-- Acertijo 5 -->
+    <div class="riddle-block" id="riddle-4">
+      <div class="riddle-number">Acertijo 5 de 6</div>
+      <div class="riddle-text">
+        ¿A qué vamos a jugar?
+      </div>
+      <div class="answer-row">
+        <input class="answer-input" id="input-4" type="text" placeholder="Tu respuesta…" autocomplete="off" />
+        <button class="btn-submit" id="submit-4">Responder</button>
+      </div>
+      <div class="feedback-msg" id="fb-4"></div>
+    </div>
+
+    <!-- Acertijo 6 -->
+    <div class="riddle-block" id="riddle-5">
+      <div class="riddle-number">Acertijo 6 de 6</div>
+      <div class="riddle-text">
+        ¿Qué vamos a comer?
+      </div>
+      <div class="answer-row">
+        <input class="answer-input" id="input-5" type="text" placeholder="Tu respuesta…" autocomplete="off" />
+        <button class="btn-submit" id="submit-5">Responder</button>
+      </div>
+      <div class="feedback-msg" id="fb-5"></div>
     </div>
   </section>
 
@@ -463,6 +505,9 @@
 
   /* ─── Acertijos ────────────────────────────── */
   const ANSWERS = [
+    ['sala de escape', 'escape room', 'escape'],
+    ['pool', 'billar'],
+    ['pizza'],
     ['sala de escape', 'escape room', 'escape'],
     ['pool', 'billar'],
     ['pizza'],
@@ -513,7 +558,7 @@
   }
 
   let current = 0;
-  const TOTAL  = 3;
+  const TOTAL  = 6;
 
   for (let i = 0; i < TOTAL; i++) {
     (function(idx) {
