@@ -250,9 +250,7 @@
       transition: background 0.2s, color 0.2s, opacity 0.2s;
     }
     #btn-no:hover { background: rgba(252,228,236,0.9); color: #c2607a; }
-    #btn-no.is-floating { position: fixed; z-index: 50; }
-    #btn-no.is-locked   { opacity: 0.42; cursor: not-allowed; filter: grayscale(0.3); }
-    #btn-no.is-locked::after { content: ' 🔒'; font-size: 0.8em; }
+
 
     /* ─── Modal ──────────────────────────────── */
     #modal-overlay {
@@ -453,10 +451,6 @@
 </div>
 
 <script>
-  /* ─── Detección táctil ─────────────────────── */
-  const isTouchDevice = () =>
-    window.matchMedia('(hover: none) and (pointer: coarse)').matches;
-
   /* ─── Bienvenida → Acertijos ───────────────── */
   document.getElementById('btn-start').addEventListener('click', () => {
     const el = document.getElementById('section-welcome');
@@ -586,47 +580,19 @@
 
   /* ─── Botón No ─────────────────────────────── */
   const btnNo = document.getElementById('btn-no');
-  let noX = 0, noY = 0, floating = false;
 
   function setupNoButton() {
-    if (isTouchDevice()) {
-      /* MÓVIL: bloqueado visualmente, abre modal al tocar */
-      btnNo.classList.add('is-locked');
-      btnNo.addEventListener('click', openModal);
-    } else {
-      /* DESKTOP: escapa al hover */
-      btnNo.addEventListener('mouseenter', floatEscape);
-      btnNo.addEventListener('mousemove',  floatEscape);
-    }
-  }
-
-  function floatEscape() {
-    if (!floating) {
-      const r = btnNo.getBoundingClientRect();
-      noX = r.left; noY = r.top;
-      btnNo.style.left = noX + 'px';
-      btnNo.style.top  = noY + 'px';
-      btnNo.classList.add('is-floating');
-      floating = true;
-    }
-    const mg = 16;
-    const maxX = window.innerWidth  - btnNo.offsetWidth  - mg;
-    const maxY = window.innerHeight - btnNo.offsetHeight - mg;
-    noX = Math.min(Math.max(noX + (Math.random()-.5)*360, mg), maxX);
-    noY = Math.min(Math.max(noY + (Math.random()-.5)*280, mg), maxY);
-    btnNo.style.transition = 'left 0.16s ease, top 0.16s ease';
-    btnNo.style.left = noX + 'px';
-    btnNo.style.top  = noY + 'px';
+    btnNo.addEventListener('click', openModal);
   }
 
   /* ─── Modal ────────────────────────────────── */
   const MODAL_MSGS = [
-    { e: '😢', t: 'Respuesta incorrecta.<br>¿Estás segura de avanzar?' },
-    { e: '😭', t: 'Volvé a pensarlo...<br>¿Segura, segura?' },
-    { e: '🥺', t: 'Pero... ¿segurísima?<br>No parece buena idea.' },
-    { e: '💔', t: 'Última oportunidad de<br>cambiar de opinión.' },
-    { e: '😤', t: 'Sigo insistiendo.<br>¿De verdad estás segura?' },
-    { e: '🙄', t: 'Bueno... lo que vos digas.<br>¿Segura segura segura?' },
+    { e: '😢', t: '¿Segura que no querés venir?<br>Pensalo bien...' },
+    { e: '😭', t: 'Pero... ¿segura segura?<br>Va a ser muy divertido.' },
+    { e: '🥺', t: 'Te prometo que lo vas a pasar<br>increíble. ¿No te replanteás?' },
+    { e: '💔', t: 'Me rompe el corazón.<br>¿Última chance de cambiar de opinión?' },
+    { e: '😤', t: 'Sigo insistiendo.<br>¿De verdad, de verdad, de verdad?' },
+    { e: '🙄', t: 'Bueno... lo que vos digas.<br>Pero yo voy a seguir preguntando. 😏' },
   ];
   let modalIdx = 0;
   const overlay = document.getElementById('modal-overlay');
