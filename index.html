@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Una Sorpresa Para Vos 🌸</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #fce4ec 0%, #fdf6f0 45%, #fce4ec 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Lato', sans-serif;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡ ♡';
+      position: fixed;
+      top: 0; left: 0;
+      width: 200%; height: 200%;
+      font-size: 2rem;
+      color: rgba(255, 182, 193, 0.13);
+      word-spacing: 2rem;
+      line-height: 4rem;
+      pointer-events: none;
+      z-index: 0;
+      letter-spacing: 1rem;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.84);
+      backdrop-filter: blur(12px);
+      border-radius: 28px;
+      box-shadow:
+        0 8px 32px rgba(220, 130, 150, 0.17),
+        0 2px 8px  rgba(220, 130, 150, 0.09),
+        inset 0 1px 0 rgba(255,255,255,0.9);
+      padding: 44px 40px;
+      max-width: 540px;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+      border: 1.5px solid rgba(255, 182, 193, 0.32);
+    }
+
+    .card-deco {
+      text-align: center;
+      font-size: 1.5rem;
+      letter-spacing: 0.4rem;
+      margin-bottom: 18px;
+      color: #e8a0b0;
+    }
+
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%     { transform: translateX(-6px); }
+      40%     { transform: translateX(6px); }
+      60%     { transform: translateX(-4px); }
+      80%     { transform: translateX(4px); }
+    }
+    @keyframes heartbeat {
+      0%,100% { transform: scale(1); }
+      15%     { transform: scale(1.18); }
+      30%     { transform: scale(1); }
+      45%     { transform: scale(1.12); }
+      60%     { transform: scale(1); }
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.88) translateY(10px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* ─── Bienvenida ─────────────────────────── */
+    #section-welcome {
+      text-align: center;
+      animation: fadeSlideIn 0.6s ease forwards;
+    }
+    #section-welcome .welcome-emoji { font-size: 2.8rem; margin-bottom: 16px; display: block; }
+    #section-welcome h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.45rem;
+      color: #5a3040;
+      line-height: 1.65;
+      margin-bottom: 10px;
+    }
+    #section-welcome h1 span { color: #c2607a; font-style: italic; }
+    #section-welcome .welcome-sub {
+      font-size: 0.9rem;
+      color: #9a6070;
+      margin-bottom: 28px;
+      line-height: 1.7;
+    }
+    .divider {
+      text-align: center;
+      color: #e8a0b0;
+      font-size: 0.85rem;
+      letter-spacing: 0.3rem;
+      margin: 18px 0 8px;
+    }
+
+    /* ─── Botón primario ─────────────────────── */
+    .btn-primary {
+      background: linear-gradient(135deg, #e8607a, #c2405a);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 14px 40px;
+      font-family: 'Lato', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.07em;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 18px rgba(194, 64, 90, 0.32);
+      display: inline-block;
+    }
+    .btn-primary:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 8px 26px rgba(194,64,90,0.4); }
+    .btn-primary:active { transform: scale(0.97); }
+
+    /* ─── Acertijos ──────────────────────────── */
+    #section-riddles { display: none; }
+    .progress-dots { display: flex; justify-content: center; gap: 10px; margin-bottom: 26px; }
+    .dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: #f5c6d0;
+      border: 2px solid #e8a0b0;
+      transition: background 0.35s, transform 0.35s;
+    }
+    .dot.active { background: #c2607a; transform: scale(1.3); }
+    .dot.done   { background: #e8a0b0; }
+
+    .riddle-block { display: none; animation: fadeSlideIn 0.5s ease forwards; }
+    .riddle-block.visible { display: block; }
+
+    .riddle-number {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #c2607a;
+      margin-bottom: 10px;
+    }
+    .riddle-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      color: #4a3040;
+      line-height: 1.75;
+      margin-bottom: 22px;
+      padding: 18px 20px;
+      background: rgba(252,228,236,0.32);
+      border-radius: 16px;
+      border-left: 3px solid #e8a0b0;
+    }
+    .answer-row { display: flex; gap: 10px; align-items: stretch; }
+    .answer-input {
+      flex: 1;
+      min-width: 0;
+      padding: 13px 16px;
+      border: 1.5px solid #f0c0cc;
+      border-radius: 14px;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.95rem;
+      color: #4a3040;
+      background: rgba(255,255,255,0.85);
+      outline: none;
+      transition: border-color 0.22s, box-shadow 0.22s;
+    }
+    .answer-input:focus { border-color: #c2607a; box-shadow: 0 0 0 3px rgba(194,96,122,0.12); }
+    .answer-input.correct { border-color: #c2607a; background: linear-gradient(135deg,#fdf0f4,#fce4ec); }
+    .answer-input.wrong   { border-color: #e08090; animation: shake 0.4s ease; }
+
+    .btn-submit {
+      background: linear-gradient(135deg, #e8607a, #c2405a);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      padding: 13px 20px;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      transition: all 0.22s ease;
+      box-shadow: 0 3px 12px rgba(194,64,90,0.28);
+      flex-shrink: 0;
+    }
+    .btn-submit:hover    { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(194,64,90,0.36); }
+    .btn-submit:disabled { opacity: 0.5; cursor: default; transform: none; }
+
+    .feedback-msg {
+      margin-top: 12px;
+      font-size: 0.84rem;
+      text-align: center;
+      min-height: 20px;
+      color: #b04050;
+      font-style: italic;
+    }
+    .feedback-msg.correct { color: #8a3050; }
+
+    /* ─── Invitación final ───────────────────── */
+    #section-invite { display: none; text-align: center; animation: fadeSlideIn 0.7s ease forwards; }
+    #section-invite .big-heart {
+      font-size: 3.2rem;
+      margin-bottom: 14px;
+      display: block;
+      animation: heartbeat 1.4s ease-in-out infinite;
+    }
+    #section-invite h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.85rem;
+      color: #5a3040;
+      margin-bottom: 8px;
+      font-style: italic;
+    }
+    #section-invite .subtitle { font-size: 0.9rem; color: #9a6070; margin-bottom: 32px; }
+
+    .invite-buttons {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    /* ─── Botón No ───────────────────────────── */
+    #btn-no {
+      background: rgba(255,255,255,0.7);
+      color: #b08090;
+      border: 1.5px solid #f0c0cc;
+      border-radius: 50px;
+      padding: 14px 32px;
+      font-family: 'Lato', sans-serif;
+      font-size: 1rem;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      transition: background 0.2s, color 0.2s, opacity 0.2s;
+    }
+    #btn-no:hover { background: rgba(252,228,236,0.9); color: #c2607a; }
+    #btn-no.is-floating { position: fixed; z-index: 50; }
+    #btn-no.is-locked   { opacity: 0.42; cursor: not-allowed; filter: grayscale(0.3); }
+    #btn-no.is-locked::after { content: ' 🔒'; font-size: 0.8em; }
+
+    /* ─── Modal ──────────────────────────────── */
+    #modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(80,30,50,0.44);
+      backdrop-filter: blur(5px);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    #modal-overlay.visible { display: flex; }
+    .modal-box {
+      background: #fff;
+      border-radius: 24px;
+      padding: 36px 28px 28px;
+      max-width: 340px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 56px rgba(80,30,50,0.24);
+      border: 1.5px solid rgba(255,182,193,0.4);
+      animation: popIn 0.35s ease forwards;
+    }
+    .modal-box .modal-emoji { font-size: 2.4rem; margin-bottom: 12px; display: block; }
+    .modal-box .modal-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.08rem;
+      color: #5a3040;
+      line-height: 1.55;
+      margin-bottom: 26px;
+    }
+    .modal-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .modal-btn-si {
+      background: linear-gradient(135deg,#e8607a,#c2405a);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 12px 28px;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(194,64,90,0.28);
+      transition: all 0.22s ease;
+    }
+    .modal-btn-si:hover { transform: translateY(-2px); }
+    .modal-btn-no {
+      background: rgba(255,255,255,0.85);
+      color: #b08090;
+      border: 1.5px solid #f0c0cc;
+      border-radius: 50px;
+      padding: 12px 22px;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.22s ease;
+    }
+    .modal-btn-no:hover { background: rgba(252,228,236,0.9); color: #c2607a; }
+
+    /* ─── Confirmación ───────────────────────── */
+    #confirm-msg { display: none; animation: fadeSlideIn 0.6s ease forwards; text-align: center; }
+    #confirm-msg .confetti-row { font-size: 2rem; margin-bottom: 12px; letter-spacing: 0.3rem; }
+    #confirm-msg p { font-family: 'Playfair Display', serif; font-size: 1.45rem; color: #5a3040; line-height: 1.6; }
+    #confirm-msg .detail { margin-top: 10px; font-family: 'Lato', sans-serif; font-size: 0.9rem; color: #9a6070; }
+
+    /* ─── Responsive ─────────────────────────── */
+    @media (max-width: 520px) {
+      .card { padding: 30px 18px; border-radius: 22px; }
+      #section-welcome h1 { font-size: 1.18rem; }
+      .riddle-text { font-size: 0.93rem; padding: 14px 15px; }
+      .answer-row { flex-direction: column; }
+      .btn-submit { width: 100%; }
+      #section-invite h2 { font-size: 1.5rem; }
+      .invite-buttons { flex-direction: column; align-items: stretch; }
+      .invite-buttons .btn-primary,
+      .invite-buttons #btn-no { width: 100%; text-align: center; }
+      .modal-box { padding: 28px 18px 22px; }
+      .modal-btns { flex-direction: column; }
+      .modal-btn-si, .modal-btn-no { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════ MODAL ═══════════════ -->
+<div id="modal-overlay">
+  <div class="modal-box">
+    <span class="modal-emoji" id="modal-emoji">😢</span>
+    <p class="modal-text" id="modal-text">Respuesta incorrecta.<br>¿Estás segura de avanzar?</p>
+    <div class="modal-btns">
+      <button class="modal-btn-si" id="modal-btn-si">Sí, acepto 💕</button>
+      <button class="modal-btn-no" id="modal-btn-no">No, insisto</button>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-deco">♡ ✦ ♡</div>
+
+  <!-- ═══════════════ BIENVENIDA ═══════════════ -->
+  <section id="section-welcome">
+    <span class="welcome-emoji">🌸</span>
+    <h1>¡Hola <span>Enana</span>!</h1>
+    <p class="welcome-sub">
+      El <strong style="color:#c2607a">6 de junio</strong> te invito a una segunda cita conmigo.<br>
+      Pero para saber si sos la indicada, tenés que resolver estos acertijos
+      y entrenar la cabeza para lo que se viene.
+    </p>
+    <div class="divider">· · · · · ·</div>
+    <br>
+    <button class="btn-primary" id="btn-start">Empezar los acertijos 🔍</button>
+  </section>
+
+  <!-- ═══════════════ ACERTIJOS ═══════════════ -->
+  <section id="section-riddles">
+    <div class="progress-dots">
+      <div class="dot active" id="dot-0"></div>
+      <div class="dot" id="dot-1"></div>
+      <div class="dot" id="dot-2"></div>
+    </div>
+
+    <!-- Acertijo 1 -->
+    <div class="riddle-block visible" id="riddle-0">
+      <div class="riddle-number">Acertijo 1 de 3</div>
+      <div class="riddle-text">
+        Hay una puerta que se cierra sola detrás de vos. Lo que está adentro no es un lugar
+        ordinario: es una conversación entre lo que sabemos y lo que todavía no.
+        Cada objeto del lugar tiene doble vida. Cada detalle esconde un idioma que hay
+        que descifrar antes de que el tiempo decida por nosotros.
+        Dos cabezas valen más que una, especialmente cuando el contador trabaja en contra.
+        <br><br><em>¿A dónde vamos?</em>
+      </div>
+      <div class="answer-row">
+        <input class="answer-input" id="input-0" type="text" placeholder="Tu respuesta…" autocomplete="off" />
+        <button class="btn-submit" id="submit-0">Responder</button>
+      </div>
+      <div class="feedback-msg" id="fb-0"></div>
+    </div>
+
+    <!-- Acertijo 2 -->
+    <div class="riddle-block" id="riddle-1">
+      <div class="riddle-number">Acertijo 2 de 3</div>
+      <div class="riddle-text">
+        Nos vamos a enfrentar sobre una superficie que no es para comer.
+        Nos movemos con una herramienta larga y delgada, nunca con las manos.
+        El objetivo es hacer desaparecer piezas en el orden correcto,
+        usando como única arma una pieza que ella misma nunca puede desaparecer.
+        Sin cálculo, sin precisión milimétrica y sin conocer los ángulos,
+        no hay forma de ganar.
+        <br><br><em>¿A qué vamos a jugar?</em>
+      </div>
+      <div class="answer-row">
+        <input class="answer-input" id="input-1" type="text" placeholder="Tu respuesta…" autocomplete="off" />
+        <button class="btn-submit" id="submit-1">Responder</button>
+      </div>
+      <div class="feedback-msg" id="fb-1"></div>
+    </div>
+
+    <!-- Acertijo 3 -->
+    <div class="riddle-block" id="riddle-2">
+      <div class="riddle-number">Acertijo 3 de 3</div>
+      <div class="riddle-text">
+        Hay un ingrediente que está vivo pero nadie lo ve ni lo escucha.
+        Sin él, lo que preparamos sería un ladrillo. Con él, algo crece solo
+        mientras nosotros esperamos, como si tuviera voluntad propia.
+        Después, el fuego hace la transformación final.
+        El resultado no tiene una versión única: cada quien lo hace distinto
+        y cada uno jura que el suyo es el mejor.
+        <br><br><em>¿Qué vamos a preparar?</em>
+      </div>
+      <div class="answer-row">
+        <input class="answer-input" id="input-2" type="text" placeholder="Tu respuesta…" autocomplete="off" />
+        <button class="btn-submit" id="submit-2">Responder</button>
+      </div>
+      <div class="feedback-msg" id="fb-2"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ INVITACIÓN FINAL ═══════════════ -->
+  <section id="section-invite">
+    <span class="big-heart">💗</span>
+    <h2>¿Aceptás la cita conmigo?</h2>
+    <p class="subtitle">El 6 de junio te espera algo muy especial ✨</p>
+
+    <div class="invite-buttons" id="invite-buttons">
+      <button class="btn-primary" id="btn-yes">Sí, acepto 💕</button>
+      <button id="btn-no">No</button>
+    </div>
+
+    <div id="confirm-msg">
+      <div class="confetti-row">🎉 💗 🎉</div>
+      <p>¡Genial! Nos vemos el 6 de junio ❤️</p>
+      <p class="detail">Ya podés ir eligiendo el outfit 😉</p>
+    </div>
+  </section>
+</div>
+
+<script>
+  /* ─── Detección táctil ─────────────────────── */
+  const isTouchDevice = () =>
+    window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+
+  /* ─── Bienvenida → Acertijos ───────────────── */
+  document.getElementById('btn-start').addEventListener('click', () => {
+    const el = document.getElementById('section-welcome');
+    el.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(-12px)';
+    setTimeout(() => {
+      el.style.display = 'none';
+      document.getElementById('section-riddles').style.display = 'block';
+      document.getElementById('input-0').focus();
+    }, 300);
+  });
+
+  /* ─── Acertijos ────────────────────────────── */
+  const ANSWERS = [
+    ['sala de escape', 'escape room', 'escape'],
+    ['pool', 'billar'],
+    ['pizza'],
+  ];
+  const WRONG_MSGS = [
+    'Eso no era... ¡Seguí pensando! 🤔',
+    'Casi, casi... pero no. Dale otra vez 😄',
+    'La cabeza caliente no ayuda. Intentá de nuevo 🔥',
+    'Nooo 😂 Pensá un poco más, ¡vos podés!',
+    '¿Segura? Algo me dice que no… 🙈',
+    'Jajaja, error. ¡Volvé a intentarlo! 😏',
+  ];
+
+  function normalize(s) {
+    return s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  }
+
+  /* Distancia de edición (Levenshtein) */
+  function levenshtein(a, b) {
+    if (a === b) return 0;
+    if (!a.length) return b.length;
+    if (!b.length) return a.length;
+    let row = Array.from({length: b.length + 1}, (_, i) => i);
+    for (let i = 0; i < a.length; i++) {
+      const next = [i + 1];
+      for (let j = 0; j < b.length; j++) {
+        next[j + 1] = a[i] === b[j]
+          ? row[j]
+          : 1 + Math.min(row[j + 1], next[j], row[j]);
+      }
+      row = next;
+    }
+    return row[b.length];
+  }
+
+  function checkOk(idx, val) {
+    const n = normalize(val);
+    return ANSWERS[idx].some(keyword => {
+      const k = normalize(keyword);
+      // Coincidencia exacta por subcadena
+      if (n.includes(k) || k.includes(n) && n.length >= 3) return true;
+      // Fuzzy: tolerancia ~1 error cada 4 letras de la palabra clave
+      return k.split(' ').filter(w => w.length >= 3).some(w => {
+        const maxDist = Math.max(1, Math.round(w.length / 4));
+        return levenshtein(n, w) <= maxDist;
+      });
+    });
+  }
+
+  let current = 0;
+  const TOTAL  = 3;
+
+  for (let i = 0; i < TOTAL; i++) {
+    (function(idx) {
+      const inp = document.getElementById('input-' + idx);
+      const btn = document.getElementById('submit-' + idx);
+      const fb  = document.getElementById('fb-' + idx);
+
+      function attempt() {
+        if (!inp.value.trim()) return;
+        if (checkOk(idx, inp.value)) {
+          inp.classList.remove('wrong');
+          inp.classList.add('correct');
+          inp.disabled = btn.disabled = true;
+          fb.classList.add('correct');
+          fb.textContent = '¡Correcto! 🌸';
+          setTimeout(advance, 850);
+        } else {
+          inp.classList.remove('correct');
+          inp.classList.add('wrong');
+          fb.classList.remove('correct');
+          fb.textContent = WRONG_MSGS[Math.floor(Math.random() * WRONG_MSGS.length)];
+          setTimeout(() => { inp.classList.remove('wrong'); fb.textContent = ''; inp.select(); }, 1500);
+        }
+      }
+      btn.addEventListener('click', attempt);
+      inp.addEventListener('keydown', e => { if (e.key === 'Enter') attempt(); });
+    })(i);
+  }
+
+  function advance() {
+    document.getElementById('dot-' + current).classList.replace('active','done');
+    current++;
+    if (current < TOTAL) {
+      document.getElementById('riddle-' + (current-1)).classList.remove('visible');
+      document.getElementById('riddle-' + current).classList.add('visible');
+      document.getElementById('dot-' + current).classList.add('active');
+      setTimeout(() => document.getElementById('input-' + current).focus(), 500);
+    } else {
+      setTimeout(showInvite, 350);
+    }
+  }
+
+  function showInvite() {
+    const s = document.getElementById('section-riddles');
+    s.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
+    s.style.opacity = '0'; s.style.transform = 'translateY(-12px)';
+    setTimeout(() => {
+      s.style.display = 'none';
+      document.getElementById('section-invite').style.display = 'block';
+      setupNoButton();
+    }, 340);
+  }
+
+  /* ─── Botón Sí ─────────────────────────────── */
+  function confirmInvite() {
+    document.getElementById('invite-buttons').style.display = 'none';
+    document.getElementById('confirm-msg').style.display = 'block';
+    document.getElementById('modal-overlay').classList.remove('visible');
+  }
+  document.getElementById('btn-yes').addEventListener('click', confirmInvite);
+
+  /* ─── Botón No ─────────────────────────────── */
+  const btnNo = document.getElementById('btn-no');
+  let noX = 0, noY = 0, floating = false;
+
+  function setupNoButton() {
+    if (isTouchDevice()) {
+      /* MÓVIL: bloqueado visualmente, abre modal al tocar */
+      btnNo.classList.add('is-locked');
+      btnNo.addEventListener('click', openModal);
+    } else {
+      /* DESKTOP: escapa al hover */
+      btnNo.addEventListener('mouseenter', floatEscape);
+      btnNo.addEventListener('mousemove',  floatEscape);
+    }
+  }
+
+  function floatEscape() {
+    if (!floating) {
+      const r = btnNo.getBoundingClientRect();
+      noX = r.left; noY = r.top;
+      btnNo.style.left = noX + 'px';
+      btnNo.style.top  = noY + 'px';
+      btnNo.classList.add('is-floating');
+      floating = true;
+    }
+    const mg = 16;
+    const maxX = window.innerWidth  - btnNo.offsetWidth  - mg;
+    const maxY = window.innerHeight - btnNo.offsetHeight - mg;
+    noX = Math.min(Math.max(noX + (Math.random()-.5)*360, mg), maxX);
+    noY = Math.min(Math.max(noY + (Math.random()-.5)*280, mg), maxY);
+    btnNo.style.transition = 'left 0.16s ease, top 0.16s ease';
+    btnNo.style.left = noX + 'px';
+    btnNo.style.top  = noY + 'px';
+  }
+
+  /* ─── Modal ────────────────────────────────── */
+  const MODAL_MSGS = [
+    { e: '😢', t: 'Respuesta incorrecta.<br>¿Estás segura de avanzar?' },
+    { e: '😭', t: 'Volvé a pensarlo...<br>¿Segura, segura?' },
+    { e: '🥺', t: 'Pero... ¿segurísima?<br>No parece buena idea.' },
+    { e: '💔', t: 'Última oportunidad de<br>cambiar de opinión.' },
+    { e: '😤', t: 'Sigo insistiendo.<br>¿De verdad estás segura?' },
+    { e: '🙄', t: 'Bueno... lo que vos digas.<br>¿Segura segura segura?' },
+  ];
+  let modalIdx = 0;
+  const overlay = document.getElementById('modal-overlay');
+
+  function openModal() {
+    const m = MODAL_MSGS[modalIdx % MODAL_MSGS.length];
+    document.getElementById('modal-emoji').textContent = m.e;
+    document.getElementById('modal-text').innerHTML   = m.t;
+    overlay.classList.add('visible');
+  }
+
+  document.getElementById('modal-btn-si').addEventListener('click', confirmInvite);
+
+  document.getElementById('modal-btn-no').addEventListener('click', () => {
+    overlay.classList.remove('visible');
+    modalIdx++;
+    setTimeout(openModal, 650);
+  });
+</script>
+</body>
+</html>
